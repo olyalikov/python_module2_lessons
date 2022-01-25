@@ -1,0 +1,61 @@
+class Message:
+    messages = [] # понял, что если объявить список здесь, то по нему не будут сохраняться значения добавленные в экземпляре через метод add_message()
+    def __init__(self, name, text):
+        self.name = name
+        self.text = text
+        #self.messages = []
+        Message.messages.append(self)
+        
+    def __repr__(self):
+        return f"{self.text}"
+    
+    def add_message(self, message):
+        self.messages.append(message)
+        
+    def get_messages(self, name):
+        find_messages = []
+        for every_element in self.messages:
+            if every_element.name == name:
+                find_messages.append(every_element.text)
+        return find_messages
+    
+class Message2:
+    #messages = []
+    def __init__(self, name, text):
+        self.name = name
+        self.text = text
+        self.messages = [] # если записывать сообщения сюда, то они будут храниться в экземпляре класса, как через __init__, так и через метод add_message()
+        #т.к. класс существует не чтобы хранить в себе данные, а исполнять логику по обработке этих данных, да?
+        self.messages.append(self) # вывод будет {'name': 'oleg', 'text': 'abc', 'messages': [abc]}. А почему в messages не 2 элемента - name и text, а только text?"""
+        #self.messages.append(self.__dict__) """вывод будет {'name': 'oleg', 'text': 'abc', 'messages': [{...}]}. Что это за чудо - {...} ??"""
+        
+    def __repr__(self):
+        return f"{self.text}"
+    
+    def add_message(self, message):
+        self.messages.append(message)
+    
+    def get_messages(self, name):
+        find_messages = []
+        for every_element in self.messages:
+            if every_element.name == name:
+                find_messages.append(every_element.text)
+        return find_messages
+    
+test1 = Message("oleg","abc") # будет сохранен в messages
+test1.add_message('xyz')      # НЕ будет сохранен в messages
+print(test1.__dict__)
+print(x.get_messages("oleg"))
+
+test2 = Message2("oleg","abc") # будет сохранен в messages
+test2.add_message('xyz')       # будет сохранен в messages
+print(test2.__dict__)
+print(x.get_messages("oleg"))
+
+
+"""
+ВЫВОД:
+{'name': 'oleg', 'text': 'abc'}
+['abc']
+{'name': 'oleg', 'text': 'abc', 'messages': [abc, 'xyz']}
+['abc']"""

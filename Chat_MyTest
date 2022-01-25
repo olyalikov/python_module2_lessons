@@ -3,7 +3,7 @@ class Message:
     def __init__(self, name, text):
         self.name = name
         self.text = text
-        #self.messages = []
+        #self.messages = [] # !!! здесь НЕ объявляем список как атрибут класса
         Message.messages.append(self)
         
     def __repr__(self):
@@ -20,12 +20,12 @@ class Message:
         return find_messages
     
 class Message2:
-    #messages = []
+    #messages = [] # !!! здесь НЕ объявляем список как переменную
     def __init__(self, name, text):
         self.name = name
         self.text = text
         self.messages = [] # если записывать сообщения сюда, то они будут храниться в экземпляре класса, как через __init__, так и через метод add_message()
-        #т.к. класс существует не чтобы хранить в себе данные, а исполнять логику по обработке этих данных, да?
+        
         self.messages.append(self) # вывод будет {'name': 'oleg', 'text': 'abc', 'messages': [abc]}. А почему в messages не 2 элемента - name и text, а только text?"""
         #self.messages.append(self.__dict__) """вывод будет {'name': 'oleg', 'text': 'abc', 'messages': [{...}]}. Что это за чудо - {...} ??"""
         
@@ -57,5 +57,5 @@ print(x.get_messages("oleg"))
 ВЫВОД:
 {'name': 'oleg', 'text': 'abc'}
 ['abc']
-{'name': 'oleg', 'text': 'abc', 'messages': [abc, 'xyz']}
+{'name': 'oleg', 'text': 'abc', 'messages': [abc, 'xyz']} 
 ['abc']"""

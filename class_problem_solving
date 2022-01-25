@@ -1,0 +1,70 @@
+import re
+import os
+
+class Message:
+    messages = []
+    def __init__(self, time, name, text):
+        self.time = time
+        self.user = name
+        self.text = text
+        #Вопрос 1 - правильно ли при создании экземпляра сразу же добавлять новый элемент в список? 
+        #Не лучше ли вывести добавление в отдельный метод? в классе Users я делаю add_user(), почему-то кажется это правильнее...
+        self.messages.append(self.__dict__) # Вопрос 2 - правильно ли добавить в список __dict__ или обязательно нужно self, как в вашей реализации?
+    
+    def __repr__(self):
+        return f"({self.time}) {self.user}: {self.text}"
+    
+    def get_messages(self, name):
+        find_messages = []
+        for every_element in self.messages:
+            if every_element.user == name:
+                find_messages.append(every_element.text)
+        return find_messages
+        
+class User:
+    users = []
+    def __init__(self, name):
+        self.name = name
+        self.messages = []
+      
+    def __repr__(self):
+        return self.name
+    
+    def add_message(self, message):
+        self.messages.append(message)
+        
+    def add_user(self):        
+        User.users.append(self.name)
+        
+    def get_user_messages(self):
+        user_message = Message.get_messages(self.name)
+        return user_message.message 
+      
+def chat_parse(filepath):
+
+    with open(filepath, 'r', encoding='utf8') as chat:
+        for line in chat:
+            #Вопрос 3- в выражении pattern в 3-й группе не получается правильно задать фильтр, чтобы выделить текст сообщения (\W*) в группу 3, через regex101.com текст нормально выделяется в группу 3.              
+            m = re.search(r'(\d{4}-\d{2}-\d{2}[ ]\d{2}:\d{2}:\d{2}).\w{1,3};([А-Я][а-я]*.[А-Я][а-я]*.[А-Я][а-я]*);(\W*)',line,re.MULTILINE)               
+            if m != None:
+                time = m.group(1) 
+                name = m.group(2) 
+                text = m.group(3)
+                _user = User(name)
+                _user.add_user()
+                new_message = Message(time, name, text)
+            else:
+                print(m) # Вопрос 4 - откуда-то вылезают None?
+            print(new_message)
+            
+        for usr in _user.users:
+           print("User: " + usr)
+           # Вопрос 5: 
+           #_user.get_user_messages() - НЕ РАБОТАЕТ, ошибка get_messages() missing 1 required positional argument: 'name'
+           #_user.get_user_messages()
+           #Message.get_messages(usr) - НЕ РАБОТАЕТ, ошибка get_messages() missing 1 required positional argument: 'name'
+           #print("===>>>\n" + Message.get_messages(usr))       
+            
+work_directory = os.getcwd()            
+
+chat_parse(work_directory+"/chat_15.txt")
